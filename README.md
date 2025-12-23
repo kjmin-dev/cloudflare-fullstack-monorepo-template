@@ -1,4 +1,13 @@
-# cloudflare-workers-backend-template
+# cloudflare-fullstack-monorepo-template
+
+🚧 **Under Development** - This template is not yet complete.
+
+A monorepo template for a Cloudflare Workers backend with a React webapp.
+
+## Demo Url
+
+- React Webapp: https://webapp-3ls.pages.dev
+- Hono API: https://api.kjmin-dev-cf-playground.workers.dev
 
 ## Prerequisites
 
