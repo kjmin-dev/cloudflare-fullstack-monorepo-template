@@ -25,4 +25,14 @@ Deploy API
 bun api deploy
 ```
 
+Run Webapp development server
+```bash
+bun webapp dev
+```
+
+Deploy Webapp
+```bash
+bun webapp deploy
+```
+
 This project was created using `bun init` in bun v1.3.5. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.

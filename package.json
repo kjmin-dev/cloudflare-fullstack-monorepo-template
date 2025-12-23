@@ -6,6 +6,7 @@
     "packages/*"
   ],
   "scripts": {
+    "webapp": "bun --cwd packages/webapp",
     "api": "bun --cwd packages/api",
     "format": "bun biome format --write",
     "lint": "bun biome lint"
