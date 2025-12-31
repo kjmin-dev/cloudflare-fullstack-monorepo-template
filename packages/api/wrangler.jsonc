@@ -2,37 +2,23 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "api",
   "main": "src/index.ts",
-  "compatibility_date": "2025-12-23"
-  // "compatibility_flags": [
-  //   "nodejs_compat"
-  // ],
-  // "vars": {
-  //   "MY_VAR": "my-variable"
-  // },
-  // "kv_namespaces": [
-  //   {
-  //     "binding": "MY_KV_NAMESPACE",
-  //     "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  //   }
-  // ],
-  // "r2_buckets": [
-  //   {
-  //     "binding": "MY_BUCKET",
-  //     "bucket_name": "my-bucket"
-  //   }
-  // ],
-  // "d1_databases": [
-  //   {
-  //     "binding": "MY_DB",
-  //     "database_name": "my-database",
-  //     "database_id": ""
-  //   }
-  // ],
-  // "ai": {
-  //   "binding": "AI"
-  // },
-  // "observability": {
-  //   "enabled": true,
-  //   "head_sampling_rate": 1
-  // }
+  "compatibility_date": "2025-12-23",
+  "d1_databases": [
+    {
+      "binding": "D1_DB",
+      "database_name": "d1_dev",
+      "database_id": "78fb303b-5a2b-48e7-84e4-4ae584f9ed20"
+    }
+  ],
+  "env": {
+    "production": {
+      "d1_databases": [
+        {
+          "binding": "D1_DB",
+          "database_name": "d1_prod",
+          "database_id": "b3f1a076-e918-4140-b110-e84dc189efe9"
+        }
+      ]
+    }
+  }
 }
