@@ -4,43 +4,64 @@
 
 A monorepo template for a Cloudflare Workers backend with a React webapp.
 
-## Demo Url
+## Demo
 
 - React Webapp: https://webapp-3ls.pages.dev
 - Hono API: https://api.kjmin-dev-cf-playground.workers.dev
 
 ## Prerequisites
 
-To install dependencies:
+Install dependencies:
 
 ```bash
-bun i
+bun install
 ```
 
-Setup wrangler (You need to have a Cloudflare account)
+Setup wrangler (requires Cloudflare account):
+
 ```bash
-bun wrangler login
+bunx wrangler login
+```
+
+## Development
+
+Run all packages in parallel with TUI:
+
+```bash
+bun run dev
+```
+
+Run individual packages:
+
+```bash
+bun run webapp dev   # Webapp only
+bun run api dev      # API only
+```
+
+## Build & Deploy
+
+```bash
+# Build all packages
+bun run build
+
+# Deploy all packages
+bun run deploy
+
+# Deploy individual packages
+bun run webapp deploy
+bun run api deploy
 ```
 
 ## D1 Database Setup
 
-Create D1 databases for development and production:
+Create D1 databases:
 
 ```bash
-# Create databases
 bunx wrangler d1 create d1_dev
 bunx wrangler d1 create d1_prod
 ```
 
-Each command will output a `database_id`. Update `packages/api/wrangler.jsonc` with these IDs:
-
-```jsonc
-// For development (root level d1_databases)
-"database_id": "<YOUR_D1_DEV_DATABASE_ID>"
-
-// For production (env.production.d1_databases)
-"database_id": "<YOUR_D1_PROD_DATABASE_ID>"
-```
+Update `packages/api/wrangler.jsonc` with the returned `database_id` values.
 
 Apply migrations:
 
@@ -57,26 +78,9 @@ bunx wrangler d1 migrations apply D1_DB --remote
 bunx wrangler d1 migrations apply D1_DB --env production --remote
 ```
 
-## Getting Started (from monorepo root)
+## Linting & Formatting
 
-Run API development server
 ```bash
-bun api dev
+bun run lint      # Check lint errors
+bun run format    # Format code
 ```
-
-Deploy API
-```bash
-bun api deploy
-```
-
-Run Webapp development server
-```bash
-bun webapp dev
-```
-
-Deploy Webapp
-```bash
-bun webapp deploy
-```
-
-This project was created using `bun init` in bun v1.3.5. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
