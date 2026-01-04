@@ -39,12 +39,20 @@ async function request<T>(method: HttpMethod, path: string, config: ApiRequestCo
     });
 
     if (!response.ok) {
+      // RFC 7807 Problem Details format
       const errorBody = (await response.json().catch(() => ({}))) as Record<string, unknown>;
+      const message =
+        typeof errorBody.detail === 'string'
+          ? errorBody.detail
+          : typeof errorBody.title === 'string'
+            ? errorBody.title
+            : `Request failed with status ${response.status}`;
+      const { status: _, title: __, detail: ___, code, ...extensions } = errorBody;
       throw new ApiError(
-        typeof errorBody.message === 'string' ? errorBody.message : `Request failed with status ${response.status}`,
+        message,
         response.status,
-        typeof errorBody.code === 'string' ? errorBody.code : undefined,
-        errorBody.details,
+        typeof code === 'string' ? code : undefined,
+        Object.keys(extensions).length > 0 ? extensions : undefined,
       );
     }
 

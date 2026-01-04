@@ -71,11 +71,15 @@ export const TodoSchema = z
 
 export const TodoListSchema = z.array(TodoSchema).openapi('TodoList');
 
-export const ErrorResponseSchema = z
+// RFC 7807 Problem Details (simplified)
+export const ProblemDetailSchema = z
   .object({
-    error: z.string().openapi({ example: 'Todo not found' }),
+    status: z.number().openapi({ example: 404, description: 'HTTP status code' }),
+    title: z.string().openapi({ example: 'Not Found', description: 'Short error summary' }),
+    detail: z.string().optional().openapi({ example: 'Todo not found', description: 'Detailed explanation' }),
+    code: z.string().optional().openapi({ example: 'TODO_NOT_FOUND', description: 'Machine-readable error code' }),
   })
-  .openapi('ErrorResponse');
+  .openapi('ProblemDetail');
 
 export const SuccessMessageSchema = z
   .object({

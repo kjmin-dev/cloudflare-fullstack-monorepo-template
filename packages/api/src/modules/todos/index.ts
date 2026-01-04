@@ -1,13 +1,14 @@
-import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
+import { createRoute, OpenAPIHono } from '@hono/zod-openapi';
 import { and, count, eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/d1';
 
 const MAX_TODOS_PER_USER = 10;
+
 import { todos } from '../../db/schema';
 import type { AppEnv } from '../../types';
 import {
   CreateTodoBodySchema,
-  ErrorResponseSchema,
+  ProblemDetailSchema,
   SuccessMessageSchema,
   TodoIdParamSchema,
   TodoListSchema,
@@ -58,7 +59,7 @@ const getTodo = createRoute({
       description: 'The requested todo',
     },
     404: {
-      content: { 'application/json': { schema: ErrorResponseSchema } },
+      content: { 'application/json': { schema: ProblemDetailSchema } },
       description: 'Todo not found',
     },
   },
@@ -83,11 +84,11 @@ const createTodo = createRoute({
       description: 'The created todo',
     },
     400: {
-      content: { 'application/json': { schema: ErrorResponseSchema } },
+      content: { 'application/json': { schema: ProblemDetailSchema } },
       description: 'Invalid request body',
     },
     409: {
-      content: { 'application/json': { schema: ErrorResponseSchema } },
+      content: { 'application/json': { schema: ProblemDetailSchema } },
       description: 'Todo limit exceeded (maximum 10 per user)',
     },
   },
@@ -112,7 +113,7 @@ const updateTodo = createRoute({
       description: 'The updated todo',
     },
     404: {
-      content: { 'application/json': { schema: ErrorResponseSchema } },
+      content: { 'application/json': { schema: ProblemDetailSchema } },
       description: 'Todo not found',
     },
   },
@@ -133,7 +134,7 @@ const deleteTodo = createRoute({
       description: 'Todo deleted successfully',
     },
     404: {
-      content: { 'application/json': { schema: ErrorResponseSchema } },
+      content: { 'application/json': { schema: ProblemDetailSchema } },
       description: 'Todo not found',
     },
   },
@@ -162,7 +163,7 @@ todosRouter.openapi(getTodo, async (c) => {
     .where(and(eq(todos.id, id), eq(todos.userId, userId)));
 
   if (!todo) {
-    return c.json({ error: 'Todo not found' }, 404);
+    return c.json({ status: 404, title: 'Not Found', detail: 'Todo not found' }, 404);
   }
 
   return c.json(todo, 200);
@@ -173,23 +174,23 @@ todosRouter.openapi(createTodo, async (c) => {
   const { title } = c.req.valid('json');
   const db = drizzle(c.env.D1_DB);
 
-  const [{ todoCount }] = await db
-    .select({ todoCount: count() })
-    .from(todos)
-    .where(eq(todos.userId, userId));
+  const countResult = await db.select({ todoCount: count() }).from(todos).where(eq(todos.userId, userId));
+  const todoCount = countResult[0]?.todoCount ?? 0;
 
   if (todoCount >= MAX_TODOS_PER_USER) {
     return c.json(
       {
-        message: `Maximum ${MAX_TODOS_PER_USER} todos allowed per user`,
+        status: 409,
+        title: 'Conflict',
+        detail: `Maximum ${MAX_TODOS_PER_USER} todos allowed per user`,
         code: 'TODO_LIMIT_EXCEEDED',
-        details: { limit: MAX_TODOS_PER_USER },
+        limit: MAX_TODOS_PER_USER, // RFC 7807 extension
       },
       409,
     );
   }
 
-  const [newTodo] = await db
+  const insertResult = await db
     .insert(todos)
     .values({
       userId,
@@ -199,6 +200,11 @@ todosRouter.openapi(createTodo, async (c) => {
       updatedAt: new Date(),
     })
     .returning();
+
+  const newTodo = insertResult[0];
+  if (!newTodo) {
+    return c.json({ status: 400, title: 'Bad Request', detail: 'Failed to create todo' }, 400);
+  }
 
   return c.json(newTodo, 201);
 });
@@ -214,10 +220,10 @@ todosRouter.openapi(updateTodo, async (c) => {
     .where(and(eq(todos.id, id), eq(todos.userId, userId)));
 
   if (!existing) {
-    return c.json({ error: 'Todo not found' }, 404);
+    return c.json({ status: 404, title: 'Not Found', detail: 'Todo not found' }, 404);
   }
 
-  const [updatedTodo] = await db
+  const updateResult = await db
     .update(todos)
     .set({
       ...(body.title !== undefined && { title: body.title }),
@@ -226,6 +232,11 @@ todosRouter.openapi(updateTodo, async (c) => {
     })
     .where(and(eq(todos.id, id), eq(todos.userId, userId)))
     .returning();
+
+  const updatedTodo = updateResult[0];
+  if (!updatedTodo) {
+    return c.json({ status: 404, title: 'Not Found', detail: 'Failed to update todo' }, 404);
+  }
 
   return c.json(updatedTodo, 200);
 });
@@ -240,7 +251,7 @@ todosRouter.openapi(deleteTodo, async (c) => {
     .where(and(eq(todos.id, id), eq(todos.userId, userId)));
 
   if (!existing) {
-    return c.json({ error: 'Todo not found' }, 404);
+    return c.json({ status: 404, title: 'Not Found', detail: 'Todo not found' }, 404);
   }
 
   await db.delete(todos).where(and(eq(todos.id, id), eq(todos.userId, userId)));

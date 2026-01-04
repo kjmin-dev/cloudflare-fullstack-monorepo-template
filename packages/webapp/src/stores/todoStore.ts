@@ -86,12 +86,8 @@ export const useTodoStore = create<TodoStore>()(
           set((state) => ({ todos: [...state.todos, newTodo], isAdding: false }), false, 'addTodo/fulfilled');
         } catch (err) {
           if (ApiError.isApiError(err) && err.code === 'TODO_LIMIT_EXCEEDED') {
-            const details = err.details as { limit?: number } | undefined;
-            set(
-              { isLimitExceeded: true, todoLimit: details?.limit ?? null, isAdding: false },
-              false,
-              'addTodo/limitExceeded',
-            );
+            const limit = typeof err.extensions?.limit === 'number' ? err.extensions.limit : null;
+            set({ isLimitExceeded: true, todoLimit: limit, isAdding: false }, false, 'addTodo/limitExceeded');
           } else {
             set({ error: 'Failed to add todo', isAdding: false }, false, 'addTodo/rejected');
           }

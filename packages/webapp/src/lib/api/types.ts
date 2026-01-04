@@ -10,10 +10,13 @@ export interface ApiResponse<T> {
   headers: Headers;
 }
 
-export interface ApiErrorResponse {
-  message: string;
+// RFC 7807 Problem Details
+export interface ProblemDetail {
+  status: number;
+  title: string;
+  detail?: string;
   code?: string;
-  details?: unknown;
+  [key: string]: unknown; // Extension fields (e.g., limit)
 }
 
 export class ApiError extends Error {
@@ -21,7 +24,7 @@ export class ApiError extends Error {
     message: string,
     public status: number,
     public code?: string,
-    public details?: unknown,
+    public extensions?: Record<string, unknown>,
   ) {
     super(message);
     this.name = 'ApiError';

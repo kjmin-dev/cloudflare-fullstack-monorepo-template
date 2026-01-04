@@ -27,19 +27,25 @@ export function Dialog({
     onClose();
   };
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
       onClose();
     }
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-      onClick={handleBackdropClick}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <button
+        type="button"
+        tabIndex={-1}
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm cursor-default"
+        onClick={onClose}
+        onKeyDown={handleKeyDown}
+        aria-label="Close dialog"
+      />
       <div
         className="
-          w-full max-w-md mx-4 p-6 rounded-2xl
+          relative w-full max-w-md mx-4 p-6 rounded-2xl
           bg-white dark:bg-slate-800
           border border-slate-200 dark:border-slate-700
           shadow-xl
