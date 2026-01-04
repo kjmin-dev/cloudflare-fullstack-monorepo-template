@@ -7,16 +7,27 @@
     {
       "binding": "D1_DB",
       "database_name": "d1_dev",
-      "database_id": "78fb303b-5a2b-48e7-84e4-4ae584f9ed20"
+      "database_id": "<YOUR_D1_DEV_DATABASE_ID>",
+      "migrations_dir": "./drizzle"
     }
   ],
+  "observability": {
+    "logs": {
+      "enabled": false,
+      "head_sampling_rate": 1,
+      "invocation_logs": true,
+      "persist": true
+    }
+  },
   "env": {
     "production": {
+      "name": "api",
       "d1_databases": [
         {
           "binding": "D1_DB",
           "database_name": "d1_prod",
-          "database_id": "b3f1a076-e918-4140-b110-e84dc189efe9"
+          "database_id": "<YOUR_D1_PROD_DATABASE_ID>",
+          "migrations_dir": "./drizzle"
         }
       ]
     }
