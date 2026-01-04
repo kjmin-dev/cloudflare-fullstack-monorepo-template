@@ -27,7 +27,11 @@
     "errorFetch": "Failed to fetch todos",
     "errorAdd": "Failed to add todo",
     "errorUpdate": "Failed to update todo",
-    "errorDelete": "Failed to delete todo"
+    "errorDelete": "Failed to delete todo",
+    "limitExceeded": {
+      "title": "Todo Limit Reached",
+      "message": "You can only have up to {{limit}} todos. Please delete some existing todos before adding new ones."
+    }
   },
   "time": {
     "now": "now",

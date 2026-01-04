@@ -27,7 +27,11 @@
     "errorFetch": "タスクの取得に失敗しました",
     "errorAdd": "タスクの追加に失敗しました",
     "errorUpdate": "タスクの更新に失敗しました",
-    "errorDelete": "タスクの削除に失敗しました"
+    "errorDelete": "タスクの削除に失敗しました",
+    "limitExceeded": {
+      "title": "タスク数の上限",
+      "message": "タスクは最大{{limit}}個まで保存できます。新しいタスクを追加するには、既存のタスクを削除してください。"
+    }
   },
   "time": {
     "now": "たった今",

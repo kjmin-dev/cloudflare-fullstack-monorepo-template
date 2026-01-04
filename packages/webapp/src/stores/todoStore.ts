@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { useShallow } from 'zustand/react/shallow';
 import { createTodo, deleteTodo, fetchTodos, updateTodo } from '../lib/api';
+import { ApiError } from '../lib/api/types';
 import type { Todo } from '../types/todo';
 
 interface TodoState {
@@ -17,6 +18,8 @@ interface TodoState {
 
   // Error
   error: string | null;
+  isLimitExceeded: boolean;
+  todoLimit: number | null;
 }
 
 interface TodoActions {
@@ -31,6 +34,7 @@ interface TodoActions {
 
   // Utils
   clearError: () => void;
+  clearLimitExceeded: () => void;
   reset: () => void;
 }
 
@@ -44,6 +48,8 @@ const initialState: TodoState = {
   pendingToggles: new Set(),
   pendingDeletes: new Set(),
   error: null,
+  isLimitExceeded: false,
+  todoLimit: null,
 };
 
 export const useTodoStore = create<TodoStore>()(
@@ -78,8 +84,17 @@ export const useTodoStore = create<TodoStore>()(
         try {
           const newTodo = await createTodo(userId, { title });
           set((state) => ({ todos: [...state.todos, newTodo], isAdding: false }), false, 'addTodo/fulfilled');
-        } catch {
-          set({ error: 'Failed to add todo', isAdding: false }, false, 'addTodo/rejected');
+        } catch (err) {
+          if (ApiError.isApiError(err) && err.code === 'TODO_LIMIT_EXCEEDED') {
+            const details = err.details as { limit?: number } | undefined;
+            set(
+              { isLimitExceeded: true, todoLimit: details?.limit ?? null, isAdding: false },
+              false,
+              'addTodo/limitExceeded',
+            );
+          } else {
+            set({ error: 'Failed to add todo', isAdding: false }, false, 'addTodo/rejected');
+          }
         }
       },
 
@@ -151,6 +166,8 @@ export const useTodoStore = create<TodoStore>()(
 
       clearError: () => set({ error: null }, false, 'clearError'),
 
+      clearLimitExceeded: () => set({ isLimitExceeded: false }, false, 'clearLimitExceeded'),
+
       reset: () => set(initialState, false, 'reset'),
     }),
     {
@@ -168,6 +185,8 @@ export const useTodos = () => useTodoStore((state) => state.todos);
 export const useIsLoading = () => useTodoStore((state) => state.isLoading);
 export const useIsAdding = () => useTodoStore((state) => state.isAdding);
 export const useTodoError = () => useTodoStore((state) => state.error);
+export const useIsLimitExceeded = () => useTodoStore((state) => state.isLimitExceeded);
+export const useTodoLimit = () => useTodoStore((state) => state.todoLimit);
 export const useIsToggling = (id: number) => useTodoStore((state) => state.pendingToggles.has(id));
 export const useIsDeleting = (id: number) => useTodoStore((state) => state.pendingDeletes.has(id));
 export const useCompletedCount = () => useTodoStore((state) => state.todos.filter((t) => t.completed).length);
@@ -183,6 +202,7 @@ export const useTodoActions = () =>
       toggleTodo: state.toggleTodo,
       removeTodo: state.removeTodo,
       clearError: state.clearError,
+      clearLimitExceeded: state.clearLimitExceeded,
       reset: state.reset,
     })),
   );

@@ -10,17 +10,19 @@ import {
   SparklesIcon,
   TrashIcon,
 } from '../components/icons';
-import { Avatar, Button, Card, Checkbox, IconButton, Input, Progress, Tooltip } from '../components/ui';
+import { Avatar, Button, Card, Checkbox, Dialog, IconButton, Input, Progress, Tooltip } from '../components/ui';
 import { formatFullDateTime, formatTime } from '../lib/formatTime';
 import {
   useCompletedCount,
   useIsAdding,
   useIsAllComplete,
   useIsDeleting,
+  useIsLimitExceeded,
   useIsLoading,
   useIsToggling,
   useTodoActions,
   useTodoError,
+  useTodoLimit,
   useTodos,
 } from '../stores/todoStore';
 import type { Todo } from '../types/todo';
@@ -96,9 +98,11 @@ function TodoListPage() {
   const isLoading = useIsLoading();
   const isAdding = useIsAdding();
   const error = useTodoError();
+  const isLimitExceeded = useIsLimitExceeded();
+  const todoLimit = useTodoLimit();
   const completedCount = useCompletedCount();
   const isAllComplete = useIsAllComplete();
-  const { setUserId, fetchTodos, addTodo, reset } = useTodoActions();
+  const { setUserId, fetchTodos, addTodo, clearLimitExceeded, reset } = useTodoActions();
 
   useEffect(() => {
     if (!userId) {
@@ -233,6 +237,11 @@ function TodoListPage() {
           )}
         </div>
       </div>
+
+      {/* Limit Exceeded Dialog */}
+      <Dialog isOpen={isLimitExceeded} onClose={clearLimitExceeded} title={t('todos.limitExceeded.title')}>
+        <p>{t('todos.limitExceeded.message', { limit: todoLimit })}</p>
+      </Dialog>
     </div>
   );
 }

@@ -1,6 +1,8 @@
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
-import { and, eq } from 'drizzle-orm';
+import { and, count, eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/d1';
+
+const MAX_TODOS_PER_USER = 10;
 import { todos } from '../../db/schema';
 import type { AppEnv } from '../../types';
 import {
@@ -67,7 +69,7 @@ const createTodo = createRoute({
   path: '/users/{userId}/todos',
   tags: ['Todos'],
   summary: 'Create a todo',
-  description: 'Creates a new todo for the specified user',
+  description: 'Creates a new todo for the specified user. Each user can have a maximum of 10 todos.',
   request: {
     params: UserIdParamSchema,
     body: {
@@ -83,6 +85,10 @@ const createTodo = createRoute({
     400: {
       content: { 'application/json': { schema: ErrorResponseSchema } },
       description: 'Invalid request body',
+    },
+    409: {
+      content: { 'application/json': { schema: ErrorResponseSchema } },
+      description: 'Todo limit exceeded (maximum 10 per user)',
     },
   },
 });
@@ -166,6 +172,22 @@ todosRouter.openapi(createTodo, async (c) => {
   const { userId } = c.req.valid('param');
   const { title } = c.req.valid('json');
   const db = drizzle(c.env.D1_DB);
+
+  const [{ todoCount }] = await db
+    .select({ todoCount: count() })
+    .from(todos)
+    .where(eq(todos.userId, userId));
+
+  if (todoCount >= MAX_TODOS_PER_USER) {
+    return c.json(
+      {
+        message: `Maximum ${MAX_TODOS_PER_USER} todos allowed per user`,
+        code: 'TODO_LIMIT_EXCEEDED',
+        details: { limit: MAX_TODOS_PER_USER },
+      },
+      409,
+    );
+  }
 
   const [newTodo] = await db
     .insert(todos)
