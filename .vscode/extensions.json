@@ -1,0 +1,32 @@
+{
+  "recommendations": [
+    // Biome - Linting & Formatting
+    "biomejs.biome",
+
+    // TypeScript
+    "ms-vscode.vscode-typescript-next",
+
+    // Cloudflare
+    "cloudflare.cloudflare-workers-bindings-extension",
+
+    // Tailwind CSS
+    "bradlc.vscode-tailwindcss",
+
+    // Drizzle ORM
+    "drizzle-team.drizzle-orm-ext",
+
+    // i18n
+    "lokalise.i18n-ally",
+
+    // Git
+    "eamodio.gitlens",
+
+    // Testing
+    "hbenl.vscode-test-explorer",
+
+    // Utilities
+    "formulahendry.auto-rename-tag",
+    "christian-kohler.path-intellisense",
+    "streetsidesoftware.code-spell-checker"
+  ]
+}
