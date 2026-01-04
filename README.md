@@ -9,6 +9,13 @@ A monorepo template for a Cloudflare Workers backend with a React webapp.
 - React Webapp: https://webapp-3ls.pages.dev
 - Hono API: https://api.kjmin-dev-cf-playground.workers.dev
 
+## API Documentation
+
+| Environment | API Docs | OpenAPI Spec |
+|-------------|----------|--------------|
+| Local | http://localhost:8788/docs | http://localhost:8788/openapi.json |
+| Production | https://api.kjmin-dev-cf-playground.workers.dev/docs | https://api.kjmin-dev-cf-playground.workers.dev/openapi.json |
+
 ## Prerequisites
 
 Install dependencies:
