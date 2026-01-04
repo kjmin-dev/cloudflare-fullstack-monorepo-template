@@ -40,9 +40,10 @@ app.route('/', todosRouter);
 app.doc('/openapi.json', {
   openapi: '3.1.0',
   info: {
-    title: 'Todo API',
+    title: 'Cloudflare Todo Demo API',
     version: '1.0.0',
-    description: 'A simple Todo API built with Hono and Cloudflare Workers',
+    description:
+      'A demo Todo API built with Hono, Drizzle ORM, and Cloudflare Workers + D1',
   },
 });
 
@@ -51,6 +52,7 @@ app.get(
   Scalar({
     theme: 'alternate',
     url: '/openapi.json',
+    pageTitle: 'Cloudflare Todo Demo API',
   }),
 );
 
