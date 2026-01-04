@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | xargs -I {} sh -c 'echo \"{}\" | grep -qE \"\\.(ts|tsx|js|jsx|json|css)$\" && bun biome check --write \"{}\" --unsafe 2>&1 || true'",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

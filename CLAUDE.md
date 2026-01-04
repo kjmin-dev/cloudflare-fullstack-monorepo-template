@@ -1,8 +1,62 @@
 ---
-description: Use Bun instead of Node.js, npm, pnpm, or vite.
+description: Cloudflare fullstack monorepo with Bun
 globs: "*.ts, *.tsx, *.html, *.css, *.js, *.jsx, package.json"
 alwaysApply: false
 ---
+
+## Project Structure
+
+Monorepo with two packages:
+
+- `packages/api` - Cloudflare Workers API
+  - Hono + Zod OpenAPI for routing and validation
+  - Drizzle ORM + Cloudflare D1 (SQLite) for database
+  - Scalar for API documentation (`/docs`)
+- `packages/webapp` - React SPA on Cloudflare Pages
+  - React 19 + TanStack Router for routing
+  - Zustand for state management
+  - Tailwind CSS v4 for styling
+  - i18next for i18n (en/ko/ja)
+
+## Commands
+
+```sh
+bun run dev          # Start both API and webapp (turbo)
+bun api dev          # Start API only (wrangler dev)
+bun webapp dev       # Start webapp only (vite)
+bun run tsc          # Type check all packages
+```
+
+## Database (Drizzle + D1)
+
+Schema defined in `packages/api/src/db/schema.ts`. To add/modify tables:
+
+```sh
+# Generate migration after schema change
+bun api drizzle-kit generate
+
+# Apply migration to local D1
+bun api wrangler d1 execute DB --local --file=drizzle/<migration>.sql
+
+# Apply migration to production D1
+bun api wrangler d1 execute DB --remote --file=drizzle/<migration>.sql
+```
+
+## API Structure
+
+- Routes: `packages/api/src/modules/<feature>/index.ts`
+- Schemas: `packages/api/src/modules/<feature>/<feature>.schemas.ts`
+- DB Schema: `packages/api/src/db/schema.ts`
+
+## Webapp Structure
+
+- Routes: `packages/webapp/src/routes/*.tsx` (file-based routing)
+- Components: `packages/webapp/src/components/ui/*.tsx`
+- Stores: `packages/webapp/src/stores/*.ts` (Zustand)
+- API Client: `packages/webapp/src/lib/api/*.ts`
+- i18n: `packages/webapp/src/i18n/locales/*.json`
+
+## Bun
 
 Default to using Bun instead of Node.js.
 
@@ -14,98 +68,6 @@ Default to using Bun instead of Node.js.
 - Use `bunx <package> <command>` instead of `npx <package> <command>`
 - Bun automatically loads .env, so don't use dotenv.
 
-## APIs
+## Code Style
 
-- `Bun.serve()` supports WebSockets, HTTPS, and routes. Don't use `express`.
-- `bun:sqlite` for SQLite. Don't use `better-sqlite3`.
-- `Bun.redis` for Redis. Don't use `ioredis`.
-- `Bun.sql` for Postgres. Don't use `pg` or `postgres.js`.
-- `WebSocket` is built-in. Don't use `ws`.
-- Prefer `Bun.file` over `node:fs`'s readFile/writeFile
-- Bun.$`ls` instead of execa.
-
-## Testing
-
-Use `bun test` to run tests.
-
-```ts#index.test.ts
-import { test, expect } from "bun:test";
-
-test("hello world", () => {
-  expect(1).toBe(1);
-});
-```
-
-## Frontend
-
-Use HTML imports with `Bun.serve()`. Don't use `vite`. HTML imports fully support React, CSS, Tailwind.
-
-Server:
-
-```ts#index.ts
-import index from "./index.html"
-
-Bun.serve({
-  routes: {
-    "/": index,
-    "/api/users/:id": {
-      GET: (req) => {
-        return new Response(JSON.stringify({ id: req.params.id }));
-      },
-    },
-  },
-  // optional websocket support
-  websocket: {
-    open: (ws) => {
-      ws.send("Hello, world!");
-    },
-    message: (ws, message) => {
-      ws.send(message);
-    },
-    close: (ws) => {
-      // handle close
-    }
-  },
-  development: {
-    hmr: true,
-    console: true,
-  }
-})
-```
-
-HTML files can import .tsx, .jsx or .js files directly and Bun's bundler will transpile & bundle automatically. `<link>` tags can point to stylesheets and Bun's CSS bundler will bundle.
-
-```html#index.html
-<html>
-  <body>
-    <h1>Hello, world!</h1>
-    <script type="module" src="./frontend.tsx"></script>
-  </body>
-</html>
-```
-
-With the following `frontend.tsx`:
-
-```tsx#frontend.tsx
-import React from "react";
-import { createRoot } from "react-dom/client";
-
-// import .css files directly and it works
-import './index.css';
-
-const root = createRoot(document.body);
-
-export default function Frontend() {
-  return <h1>Hello, world!</h1>;
-}
-
-root.render(<Frontend />);
-```
-
-Then, run index.ts
-
-```sh
-bun --hot ./index.ts
-```
-
-For more information, read the Bun API docs in `node_modules/bun-types/docs/**.mdx`.
+This project uses Biome for formatting and linting. Read `biome.json` and follow its rules when writing code.
