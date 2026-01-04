@@ -7,6 +7,7 @@
     {
       "binding": "D1_DB",
       "database_name": "d1_dev",
+      "database_id": "{}",
       "migrations_dir": "./drizzle"
     }
   ],
