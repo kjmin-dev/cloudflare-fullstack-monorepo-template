@@ -1,0 +1,43 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred"
+  },
+  "main": {
+    "title": "Todo List",
+    "subtitle": "Manage your tasks and boost productivity",
+    "placeholder": "Enter your user ID",
+    "start": "Get Started",
+    "footer": "Made with Cloudflare Workers + D1"
+  },
+  "todos": {
+    "greeting": "Have a great day!",
+    "logout": "Logout",
+    "progress": "Progress",
+    "completed": "{{count}} / {{total}} done",
+    "allCompleted": "All done!",
+    "addPlaceholder": "Add a new todo...",
+    "emptyTitle": "No todos yet",
+    "emptyDescription": "Add a new todo above to get started",
+    "created": "Created",
+    "updated": "Updated",
+    "createdAt": "Created at: {{time}}",
+    "updatedAt": "Updated at: {{time}}",
+    "delete": "Delete",
+    "errorFetch": "Failed to fetch todos",
+    "errorAdd": "Failed to add todo",
+    "errorUpdate": "Failed to update todo",
+    "errorDelete": "Failed to delete todo"
+  },
+  "time": {
+    "now": "now",
+    "secondsAgo": "{{count}}s ago",
+    "minutesAgo": "{{count}}m ago",
+    "hoursAgo": "{{count}}h ago"
+  },
+  "language": {
+    "ko": "한국어",
+    "en": "English",
+    "ja": "日本語"
+  }
+}

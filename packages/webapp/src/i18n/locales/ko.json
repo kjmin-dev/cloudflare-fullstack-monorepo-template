@@ -1,0 +1,43 @@
+{
+  "common": {
+    "loading": "로딩 중...",
+    "error": "오류가 발생했습니다"
+  },
+  "main": {
+    "title": "Todo List",
+    "subtitle": "할 일을 관리하고 생산성을 높이세요",
+    "placeholder": "사용자 ID를 입력하세요",
+    "start": "시작하기",
+    "footer": "Made with Cloudflare Workers + D1"
+  },
+  "todos": {
+    "greeting": "오늘도 화이팅!",
+    "logout": "로그아웃",
+    "progress": "진행률",
+    "completed": "{{count}} / {{total}} 완료",
+    "allCompleted": "모두 완료!",
+    "addPlaceholder": "새로운 할 일을 입력하세요...",
+    "emptyTitle": "아직 할 일이 없습니다",
+    "emptyDescription": "위에서 새로운 할 일을 추가해보세요",
+    "created": "생성",
+    "updated": "수정",
+    "createdAt": "생성시간: {{time}}",
+    "updatedAt": "수정시간: {{time}}",
+    "delete": "삭제",
+    "errorFetch": "할 일을 불러오는데 실패했습니다",
+    "errorAdd": "할 일 추가에 실패했습니다",
+    "errorUpdate": "할 일 수정에 실패했습니다",
+    "errorDelete": "할 일 삭제에 실패했습니다"
+  },
+  "time": {
+    "now": "방금",
+    "secondsAgo": "{{count}}초 전",
+    "minutesAgo": "{{count}}분 전",
+    "hoursAgo": "{{count}}시간 전"
+  },
+  "language": {
+    "ko": "한국어",
+    "en": "English",
+    "ja": "日本語"
+  }
+}
