@@ -13,15 +13,15 @@ import {
 import { Avatar, Button, Card, Checkbox, IconButton, Input, Progress, Tooltip } from '../components/ui';
 import { formatFullDateTime, formatTime } from '../lib/formatTime';
 import {
-  selectCompletedCount,
-  selectError,
-  selectIsAdding,
-  selectIsAllComplete,
-  selectIsDeleting,
-  selectIsLoading,
-  selectIsToggling,
-  selectTodos,
-  useTodoStore,
+  useCompletedCount,
+  useIsAdding,
+  useIsAllComplete,
+  useIsDeleting,
+  useIsLoading,
+  useIsToggling,
+  useTodoActions,
+  useTodoError,
+  useTodos,
 } from '../stores/todoStore';
 import type { Todo } from '../types/todo';
 
@@ -33,10 +33,9 @@ export const Route = createFileRoute('/todos')({
 
 function TodoItem({ todo }: { todo: Todo }) {
   const { t } = useTranslation();
-  const toggleTodo = useTodoStore((state) => state.toggleTodo);
-  const removeTodo = useTodoStore((state) => state.removeTodo);
-  const isToggling = useTodoStore(selectIsToggling(todo.id));
-  const isDeleting = useTodoStore(selectIsDeleting(todo.id));
+  const { toggleTodo, removeTodo } = useTodoActions();
+  const isToggling = useIsToggling(todo.id);
+  const isDeleting = useIsDeleting(todo.id);
   const isDisabled = isToggling || isDeleting;
 
   return (
@@ -93,17 +92,13 @@ function TodoListPage() {
   const userId = localStorage.getItem(USER_ID_KEY);
 
   // Zustand store
-  const todos = useTodoStore(selectTodos);
-  const isLoading = useTodoStore(selectIsLoading);
-  const isAdding = useTodoStore(selectIsAdding);
-  const error = useTodoStore(selectError);
-  const completedCount = useTodoStore(selectCompletedCount);
-  const isAllComplete = useTodoStore(selectIsAllComplete);
-
-  const setUserId = useTodoStore((state) => state.setUserId);
-  const fetchTodos = useTodoStore((state) => state.fetchTodos);
-  const addTodo = useTodoStore((state) => state.addTodo);
-  const reset = useTodoStore((state) => state.reset);
+  const todos = useTodos();
+  const isLoading = useIsLoading();
+  const isAdding = useIsAdding();
+  const error = useTodoError();
+  const completedCount = useCompletedCount();
+  const isAllComplete = useIsAllComplete();
+  const { setUserId, fetchTodos, addTodo, reset } = useTodoActions();
 
   useEffect(() => {
     if (!userId) {

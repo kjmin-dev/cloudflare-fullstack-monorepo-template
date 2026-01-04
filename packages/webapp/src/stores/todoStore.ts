@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import { useShallow } from 'zustand/react/shallow';
 import { createTodo, deleteTodo, fetchTodos, updateTodo } from '../lib/api';
 import type { Todo } from '../types/todo';
 
@@ -162,13 +163,26 @@ export const useTodoStore = create<TodoStore>()(
   ),
 );
 
-// Selectors
-export const selectTodos = (state: TodoStore) => state.todos;
-export const selectIsLoading = (state: TodoStore) => state.isLoading;
-export const selectIsAdding = (state: TodoStore) => state.isAdding;
-export const selectError = (state: TodoStore) => state.error;
-export const selectIsToggling = (id: number) => (state: TodoStore) => state.pendingToggles.has(id);
-export const selectIsDeleting = (id: number) => (state: TodoStore) => state.pendingDeletes.has(id);
-export const selectCompletedCount = (state: TodoStore) => state.todos.filter((t) => t.completed).length;
-export const selectIsAllComplete = (state: TodoStore) =>
-  state.todos.length > 0 && state.todos.every((t) => t.completed);
+// Custom hooks
+export const useTodos = () => useTodoStore((state) => state.todos);
+export const useIsLoading = () => useTodoStore((state) => state.isLoading);
+export const useIsAdding = () => useTodoStore((state) => state.isAdding);
+export const useTodoError = () => useTodoStore((state) => state.error);
+export const useIsToggling = (id: number) => useTodoStore((state) => state.pendingToggles.has(id));
+export const useIsDeleting = (id: number) => useTodoStore((state) => state.pendingDeletes.has(id));
+export const useCompletedCount = () => useTodoStore((state) => state.todos.filter((t) => t.completed).length);
+export const useIsAllComplete = () =>
+  useTodoStore((state) => state.todos.length > 0 && state.todos.every((t) => t.completed));
+
+export const useTodoActions = () =>
+  useTodoStore(
+    useShallow((state) => ({
+      setUserId: state.setUserId,
+      fetchTodos: state.fetchTodos,
+      addTodo: state.addTodo,
+      toggleTodo: state.toggleTodo,
+      removeTodo: state.removeTodo,
+      clearError: state.clearError,
+      reset: state.reset,
+    })),
+  );
