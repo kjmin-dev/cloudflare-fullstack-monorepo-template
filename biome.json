@@ -8,7 +8,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!**/wrangler.jsonc", "!**/worker-configuration.d.ts"]
+    "includes": ["**", "!**/wrangler.jsonc", "!**/worker-configuration.d.ts", "!**/routeTree.gen.ts"]
   },
   "formatter": {
     "enabled": true,
@@ -32,6 +32,12 @@
       "semicolons": "always",
       "arrowParentheses": "always",
       "trailingCommas": "all"
+    }
+  },
+  "css": {
+    "parser": {
+      "cssModules": true,
+      "tailwindDirectives": true
     }
   },
   "assist": {

@@ -156,7 +156,7 @@ export const useTodoStore = create<TodoStore>()(
       name: 'TodoStore',
       enabled: process.env.NODE_ENV !== 'production',
       serialize: {
-        replacer: (_key, value) => (value instanceof Set ? [...value] : value),
+        replacer: (_key: string, value: unknown) => (value instanceof Set ? [...value] : value),
       },
     },
   ),

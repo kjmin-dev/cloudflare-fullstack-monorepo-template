@@ -37,4 +37,4 @@ export function getApiBaseUrl(): string {
   return getApiConfig().baseUrl;
 }
 
-export { type ApiConfig, type Environment };
+export type { ApiConfig, Environment };
