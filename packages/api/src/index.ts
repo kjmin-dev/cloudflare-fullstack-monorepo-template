@@ -42,8 +42,7 @@ app.doc('/openapi.json', {
   info: {
     title: 'Cloudflare Todo Demo API',
     version: '1.0.0',
-    description:
-      'A demo Todo API built with Hono, Drizzle ORM, and Cloudflare Workers + D1',
+    description: 'A demo Todo API built with Hono, Drizzle ORM, and Cloudflare Workers + D1',
   },
 });
 

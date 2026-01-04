@@ -7,7 +7,6 @@
     {
       "binding": "D1_DB",
       "database_name": "d1_dev",
-      "database_id": "<YOUR_D1_DEV_DATABASE_ID>",
       "migrations_dir": "./drizzle"
     }
   ],
@@ -26,7 +25,8 @@
         {
           "binding": "D1_DB",
           "database_name": "d1_prod",
-          "database_id": "<YOUR_D1_PROD_DATABASE_ID>",
+          // Create your own D1 database: bunx wrangler d1 create d1_prod
+          "database_id": "<CLOUDFLARE_D1_DATABASE_ID>",
           "migrations_dir": "./drizzle"
         }
       ]

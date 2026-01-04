@@ -1,0 +1,35 @@
+name: Deploy Webapp
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/webapp/**'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-webapp-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy Webapp
+    runs-on: ubuntu-latest
+    environment: DEPLOY_CF_PROD
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build and Deploy to Cloudflare Pages
+        working-directory: packages/webapp
+        run: bun run deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
