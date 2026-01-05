@@ -1,6 +1,6 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router';
-import { LanguageSwitcher } from '../components/LanguageSwitcher';
-import { ThemeToggle } from '../components/ThemeToggle';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 export const Route = createRootRoute({
   component: RootComponent,

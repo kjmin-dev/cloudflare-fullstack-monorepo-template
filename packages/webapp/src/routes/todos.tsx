@@ -9,9 +9,19 @@ import {
   RefreshIcon,
   SparklesIcon,
   TrashIcon,
-} from '../components/icons';
-import { Avatar, Button, Card, Checkbox, Dialog, IconButton, Input, Progress, Tooltip } from '../components/ui';
-import { formatFullDateTime, formatTime } from '../lib/formatTime';
+} from '@/components/icons';
+import {
+  Avatar,
+  Button,
+  Card,
+  Checkbox,
+  Dialog,
+  IconButton,
+  Input,
+  Progress,
+  Tooltip,
+} from '@/components/ui/ui.exports';
+import { formatFullDateTime, formatTime } from '@/lib/formatTime';
 import {
   useCompletedCount,
   useIsAdding,
@@ -24,8 +34,8 @@ import {
   useTodoError,
   useTodoLimit,
   useTodos,
-} from '../stores/todoStore';
-import type { Todo } from '../types/todo';
+} from '@/stores/todoStore';
+import type { Todo } from '@/types/todo';
 
 const USER_ID_KEY = 'todo_user_id';
 

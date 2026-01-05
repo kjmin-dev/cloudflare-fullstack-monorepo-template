@@ -1,8 +1,8 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowRightIcon, ClipboardCheckIcon } from '../components/icons';
-import { Button, Card, Input } from '../components/ui';
+import { ArrowRightIcon, ClipboardCheckIcon } from '@/components/icons';
+import { Button, Card, Input } from '@/components/ui/ui.exports';
 
 const USER_ID_KEY = 'todo_user_id';
 

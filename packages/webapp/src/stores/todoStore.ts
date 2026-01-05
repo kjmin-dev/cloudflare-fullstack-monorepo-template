@@ -1,9 +1,8 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { useShallow } from 'zustand/react/shallow';
-import { createTodo, deleteTodo, fetchTodos, updateTodo } from '../lib/api';
-import { ApiError } from '../lib/api/types';
-import type { Todo } from '../types/todo';
+import { ApiError, createTodo, deleteTodo, fetchTodos, updateTodo } from '@/lib/api/api.exports';
+import type { Todo } from '@/types/todo';
 
 interface TodoState {
   // Data

@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { type SupportedLanguage, supportedLanguages } from '../i18n';
-import { ChevronDownIcon, GlobeIcon } from './icons';
-import { Button, Card } from './ui';
+import { type SupportedLanguage, supportedLanguages } from '@/i18n/i18n.config';
+import { ChevronDownIcon, GlobeIcon } from '@/components/icons';
+import { Button, Card } from '@/components/ui/ui.exports';
 
 export function LanguageSwitcher() {
   const { t, i18n } = useTranslation();

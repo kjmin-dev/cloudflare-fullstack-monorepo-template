@@ -44,7 +44,8 @@ bun api wrangler d1 execute DB --remote --file=drizzle/<migration>.sql
 
 ## API Structure
 
-- Routes: `packages/api/src/modules/<feature>/index.ts`
+- Entry: `packages/api/src/app.ts`
+- Routes: `packages/api/src/modules/<feature>/<feature>.routes.ts`
 - Schemas: `packages/api/src/modules/<feature>/<feature>.schemas.ts`
 - DB Schema: `packages/api/src/db/schema.ts`
 
@@ -52,9 +53,12 @@ bun api wrangler d1 execute DB --remote --file=drizzle/<migration>.sql
 
 - Routes: `packages/webapp/src/routes/*.tsx` (file-based routing)
 - Components: `packages/webapp/src/components/ui/*.tsx`
+- UI Exports: `@/components/ui/ui.exports` (named barrel)
 - Stores: `packages/webapp/src/stores/*.ts` (Zustand)
-- API Client: `packages/webapp/src/lib/api/*.ts`
-- i18n: `packages/webapp/src/i18n/locales/*.json`
+- API Client: `@/lib/api/api.exports`
+- i18n Config: `@/i18n/i18n.config`
+- i18n Locales: `packages/webapp/src/i18n/locales/*.json`
+- Path Alias: `@/*` → `src/*`
 
 ## Bun
 

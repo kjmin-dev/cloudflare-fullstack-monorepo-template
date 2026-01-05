@@ -1,10 +1,10 @@
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ThemeProvider } from './contexts/ThemeContext';
-import './i18n';
-import './index.css';
-import { routeTree } from './routeTree.gen';
+import { ThemeProvider } from '@/contexts/ThemeContext';
+import '@/i18n/i18n.config';
+import '@/index.css';
+import { routeTree } from '@/routeTree.gen';
 
 const router = createRouter({ routeTree });
 

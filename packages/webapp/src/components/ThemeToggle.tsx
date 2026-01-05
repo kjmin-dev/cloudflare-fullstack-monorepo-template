@@ -1,6 +1,6 @@
-import { useTheme } from '../contexts/ThemeContext';
-import { MoonIcon, SunIcon } from './icons';
-import { IconButton } from './ui';
+import { useTheme } from '@/contexts/ThemeContext';
+import { MoonIcon, SunIcon } from '@/components/icons';
+import { IconButton } from '@/components/ui/ui.exports';
 
 export function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
